@@ -1,40 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import Table from './components/Table';
-import TableNav from './components/TableNav';
 import './styles/app.css'
-import { IData } from './types/types';
-
-import dataStore from './store/dataStore';
 import { observer } from 'mobx-react-lite';
-import axios from 'axios';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import TablePage from './pages/TablePage';
+import { fetchData } from './http/tableAPI';
+import dataStore from './store/dataStore';
 
 const App = () => {
-
-  const [data, setData] = useState<IData[]>([])
-
-  useEffect( () => {
-    fetchData().then(() => {
-      setData(dataStore.getData.slice((dataStore.getCurrentPage-1)*10, dataStore.getCurrentPage*10))
-    })
-    
-  } , [])
-
-  async function fetchData() {
-    try {
-      const response = await axios.get<IData[]>('https://jsonplaceholder.typicode.com/posts')
-      console.log(response)
-      dataStore.setData(response.data)
-    } catch (e) {
-      alert(e)
-    }
-  }
   
-  return (
-    <div>
-      <Table data={data}/>
-      <TableNav/>
-    </div>
-  );
+    useEffect(() => {
+      fetchData()
+    }, [])
+
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path='/*' element={<Navigate to='/1' />} />
+                <Route path='/:page' element={<TablePage/>} />
+            </Routes>
+        </BrowserRouter>
+    );
 };
 
 export default observer (App);

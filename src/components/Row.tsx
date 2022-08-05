@@ -7,7 +7,7 @@ interface RowProps {
 const Row:FC<RowProps> = ({data}) => {
     return (
         <tr key={data.id} className='tdRow'>
-            <td>{data.id}</td>  
+            <td className='tdId'>{data.id}</td>  
             <td>{data.title}</td>  
             <td>{data.body}</td>  
         </tr>
